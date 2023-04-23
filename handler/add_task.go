@@ -11,12 +11,11 @@ import (
 )
 
 type AddTask struct {
-	Store *store.TaskStore
+	Store     *store.TaskStore
 	Validator *validator.Validate
 }
 
-
-func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
+func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	var b struct {
 		Title string `json:"title" validate:"required"`
@@ -24,7 +23,6 @@ func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 	if err := json.NewDecoder(r.Body).Decode(&b); err != nil {
 		RespondJSON(ctx, w, &ErrResponse{
 			Message: err.Error(),
-
 		}, http.StatusInternalServerError)
 		return
 	}
@@ -37,8 +35,8 @@ func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 	}
 
 	t := &entity.Task{
-		Title: b.Title,
-		Status: entity.TaskStatusTodo,
+		Title:   b.Title,
+		Status:  entity.TaskStatusTodo,
 		Created: time.Now(),
 	}
 	id, err := store.Tasks.Add(t)
@@ -50,7 +48,6 @@ func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 	}
 	rsp := struct {
 		ID entity.TaskID `json:"id"`
-
-	}{ID:id}
+	}{ID: id}
 	RespondJSON(ctx, w, rsp, http.StatusOK)
 }
