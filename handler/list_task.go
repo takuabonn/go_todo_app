@@ -18,7 +18,7 @@ type task struct {
 
 }
 
-func (lt *ListTask) ServeHTTP(w http.ResponseWriter, r http.Request)  {
+func (lt *ListTask) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 	ctx := r.Context()
 
 	tasks := lt.Store.All()
