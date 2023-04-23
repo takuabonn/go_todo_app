@@ -12,10 +12,10 @@ import (
 	"github.com/takuabonn/go_todo_app/testutil"
 )
 
-func TestAddTask(t *testing.T)  {
+func TestAddTask(t *testing.T) {
 	t.Parallel()
 	type want struct {
-		status int
+		status  int
 		rspFile string
 	}
 	tests := map[string]struct {
@@ -59,12 +59,10 @@ func TestAddTask(t *testing.T)  {
 			sut.ServeHTTP(w, r)
 
 			resp := w.Result()
-			testutil.AssertResponse(t, 
+			testutil.AssertResponse(t,
 				resp, tt.want.status, testutil.LoadFile(t, tt.want.rspFile),
 			)
-
 		})
 
 	}
-	
 }
