@@ -63,6 +63,5 @@ func TestAddTask(t *testing.T) {
 				resp, tt.want.status, testutil.LoadFile(t, tt.want.rspFile),
 			)
 		})
-
 	}
 }
