@@ -14,7 +14,7 @@ var (
 
 type TaskStore struct {
 	LastID entity.TaskID
-	Tasks map[entity.TaskID]*entity.Task
+	Tasks  map[entity.TaskID]*entity.Task
 }
 
 func (ts *TaskStore) Add(t *entity.Task) (entity.TaskID, error) {
@@ -32,5 +32,4 @@ func (ts *TaskStore) All() entity.Tasks {
 	}
 
 	return tasks
-
 }

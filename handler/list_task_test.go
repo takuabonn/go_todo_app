@@ -14,7 +14,7 @@ import (
 func TestListTask(t *testing.T) {
 	t.Parallel()
 	type want struct {
-		status int
+		status  int
 		rspFile string
 	}
 	tests := map[string]struct {
@@ -27,7 +27,6 @@ func TestListTask(t *testing.T) {
 				rspFile: "testdata/list_task/ok_rsp.json.golden",
 			},
 		},
-		
 	}
 
 	for n, tt := range tests {
@@ -46,25 +45,24 @@ func TestListTask(t *testing.T) {
 				Store: &store.TaskStore{
 					Tasks: map[entity.TaskID]*entity.Task{
 						1: {
-							ID: 1,
-							Title: "test1",
-							Status: "todo",
+							ID:      1,
+							Title:   "test1",
+							Status:  "todo",
 							Created: time.Now(),
 						},
 						2: {
-							ID: 2,
-							Title: "test2",
-							Status: "done",
+							ID:      2,
+							Title:   "test2",
+							Status:  "done",
 							Created: time.Now(),
 						},
-						
 					},
 				},
 			}
 			sut.ServeHTTP(w, r)
 
 			resp := w.Result()
-			testutil.AssertResponse(t, 
+			testutil.AssertResponse(t,
 				resp, tt.want.status, testutil.LoadFile(t, tt.want.rspFile),
 			)
 
