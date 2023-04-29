@@ -10,11 +10,9 @@ import (
 )
 
 func main() {
-
 	if err := run(context.Background()); err != nil {
 		log.Printf("failed to terminal server: %v", err)
 	}
-
 }
 
 func run(ctx context.Context) error {
@@ -28,7 +26,7 @@ func run(ctx context.Context) error {
 	}
 	url := fmt.Sprintf("http://%s", l.Addr().String())
 	log.Printf("start with: %v", url)
-	mux, cleanup, err := NewMux(ctx, cfg)
+	mux, cleanup, _ := NewMux(ctx, cfg)
 	defer cleanup()
 	s := NewServer(l, mux)
 	return s.Run(ctx)
