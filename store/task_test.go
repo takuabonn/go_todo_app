@@ -14,7 +14,6 @@ import (
 )
 
 func runMigration(port string) error {
-
 	filePath := "../_tools/mysql/schema.sql"
 	cmd := exec.Command("mysqldef",
 		"-u", "root",
@@ -75,7 +74,6 @@ func prepareTasks(ctx context.Context, t *testing.T, con Execer) entity.Tasks {
 	wants[2].ID = entity.TaskID(id + 2)
 	return wants
 }
-
 func TestRepository_ListTasks(t *testing.T) {
 	ctx := context.Background()
 	// コンテナ(DB)の立ち上げ, 接続
@@ -100,9 +98,7 @@ func TestRepository_ListTasks(t *testing.T) {
 	if d := cmp.Diff(gots, wants); len(d) != 0 {
 		t.Errorf("differs: (-got +want)\n%s", d)
 	}
-
 }
-
 func TestRepository_AddTask(t *testing.T) {
 	ctx := context.Background()
 	resource, pool := testutil.CreateContainer()
@@ -135,5 +131,4 @@ func TestRepository_AddTask(t *testing.T) {
 	if err := db.SelectContext(ctx, tasks, sql, insertTask.ID); err != nil {
 		t.Errorf("not found task :%s", err)
 	}
-
 }
