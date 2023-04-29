@@ -1,13 +1,13 @@
 package handler
 
 import (
+	"context"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 
 	"github.com/takuabonn/go_todo_app/entity"
-	"github.com/takuabonn/go_todo_app/store"
 	"github.com/takuabonn/go_todo_app/testutil"
 )
 
@@ -18,47 +18,44 @@ func TestListTask(t *testing.T) {
 		rspFile string
 	}
 	tests := map[string]struct {
-		reqFile string
-		want    want
+		tasks []*entity.Task
+		want  want
 	}{
 		"ok": {
+			tasks: []*entity.Task{
+				{
+					ID:     1,
+					Title:  "test1",
+					Status: entity.TaskStatusTodo,
+				},
+				{
+					ID:     2,
+					Title:  "test2",
+					Status: entity.TaskStatusDone,
+				},
+			},
 			want: want{
 				status:  http.StatusOK,
 				rspFile: "testdata/list_task/ok_rsp.json.golden",
 			},
 		},
 	}
-
 	for n, tt := range tests {
 		tt := tt
 		t.Run(n, func(t *testing.T) {
 			t.Parallel()
 
 			w := httptest.NewRecorder()
-			r := httptest.NewRequest(
-				http.MethodGet,
-				"/tasks",
-				nil,
-			)
+			r := httptest.NewRequest(http.MethodGet, "/tasks", nil)
 
-			sut := ListTask{
-				Store: &store.TaskStore{
-					Tasks: map[entity.TaskID]*entity.Task{
-						1: {
-							ID:      1,
-							Title:   "test1",
-							Status:  "todo",
-							Created: time.Now(),
-						},
-						2: {
-							ID:      2,
-							Title:   "test2",
-							Status:  "done",
-							Created: time.Now(),
-						},
-					},
-				},
+			moq := &ListTasksServiceMock{}
+			moq.ListTasksFunc = func(ctx context.Context) (entity.Tasks, error) {
+				if tt.tasks != nil {
+					return tt.tasks, nil
+				}
+				return nil, errors.New("error from mock")
 			}
+			sut := ListTask{Service: moq}
 			sut.ServeHTTP(w, r)
 
 			resp := w.Result()
