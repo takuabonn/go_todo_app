@@ -49,5 +49,4 @@ func (ru *RegisterUser) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}{ID: u.ID}
 
 	RespondJSON(ctx, w, rsp, http.StatusOK)
-
 }
