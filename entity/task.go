@@ -3,7 +3,6 @@ package entity
 import "time"
 
 type TaskID int64
-type UserID int64
 type TaskStatus string
 
 const (
