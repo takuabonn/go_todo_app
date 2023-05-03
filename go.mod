@@ -14,7 +14,7 @@ require (
 	github.com/lestrrat-go/jwx/v2 v2.0.9
 	github.com/matryer/moq v0.3.1
 	github.com/ory/dockertest v3.3.5+incompatible
-	golang.org/x/crypto v0.7.0
+	golang.org/x/crypto v0.8.0
 	golang.org/x/sync v0.1.0
 )
 
