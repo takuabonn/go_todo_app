@@ -29,6 +29,10 @@ func NewMux(ctx context.Context, cfg *config.Config) (http.Handler, func(), erro
 	r := store.Repository{Clocker: clocker}
 
 	rcli, err := store.NewKVS(ctx, cfg)
+	if err != nil {
+		return nil, cleanup, err
+	}
+
 	jwter, err := auth.NewJWTer(rcli, clocker)
 	if err != nil {
 		return nil, cleanup, err

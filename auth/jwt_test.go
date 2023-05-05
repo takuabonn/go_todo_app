@@ -196,5 +196,4 @@ func TestJWTer_GetToken_NG(t *testing.T) {
 			}
 		})
 	}
-
 }
