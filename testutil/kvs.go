@@ -1,11 +1,12 @@
 package testutil
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"testing"
 
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v8"
 )
 
 func OpenRedisForTest(t *testing.T) *redis.Client {
@@ -22,7 +23,7 @@ func OpenRedisForTest(t *testing.T) *redis.Client {
 		Password: "",
 		DB:       0, // default database number
 	})
-	if err := client.Ping().Err(); err != nil {
+	if err := client.Ping(context.Background()).Err(); err != nil {
 		t.Fatalf("failed to connect redis: %s", err)
 	}
 	return client

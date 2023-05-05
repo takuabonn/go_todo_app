@@ -12,15 +12,16 @@ import (
 
 func TestKVS_Save(t *testing.T) {
 	t.Parallel()
-
-	cli := testutil.OpenRedisForTest(t)
+	redisResource, pool := testutil.CreateRedisContainer()
+	defer testutil.CloseRedisContainer(redisResource, pool)
+	cli, _ := testutil.ConnectRedis(redisResource, pool)
 
 	sut := &KVS{Cli: cli}
 	key := "TestKVS_Save"
 	uid := entity.UserID(1234)
 	ctx := context.Background()
 	t.Cleanup(func() {
-		cli.Del(key)
+		cli.Del(ctx, key)
 	})
 	if err := sut.Save(ctx, key, uid); err != nil {
 		t.Errorf("want no error, but got %v", err)
@@ -29,19 +30,21 @@ func TestKVS_Save(t *testing.T) {
 
 func TestKVS_Load(t *testing.T) {
 	t.Parallel()
-
-	cli := testutil.OpenRedisForTest(t)
+	redisResource, pool := testutil.CreateRedisContainer()
+	t.Cleanup(func() {
+		testutil.CloseRedisContainer(redisResource, pool)
+	})
+	cli, _ := testutil.ConnectRedis(redisResource, pool)
 	sut := &KVS{Cli: cli}
 
 	t.Run("ok", func(t *testing.T) {
 		t.Parallel()
-
 		key := "TestKVS_Load_ok"
 		uid := entity.UserID(1234)
 		ctx := context.Background()
-		cli.Set(key, int64(uid), 30*time.Minute)
+		cli.Set(ctx, key, int64(uid), 30*time.Minute)
 		t.Cleanup(func() {
-			cli.Del(key)
+			cli.Del(ctx, key)
 		})
 		got, err := sut.Load(ctx, key)
 		if err != nil {
@@ -54,7 +57,6 @@ func TestKVS_Load(t *testing.T) {
 
 	t.Run("notFound", func(t *testing.T) {
 		t.Parallel()
-
 		key := "TestKVS_Save_notFound"
 		ctx := context.Background()
 		got, err := sut.Load(ctx, key)
